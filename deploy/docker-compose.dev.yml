@@ -1,0 +1,15 @@
+services:
+  protocol-api-dev:
+    image: registry.gitlab.com/tg_protocol/backend/development:latest
+    container_name: protocol-api-dev
+    network_mode: "host"
+    restart: always
+    init: true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -Ssf http://${REST_API_HOST}:${REST_API_PORT}/protocol/api/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
+    command: "node services/rest_api/index.js"

@@ -1,0 +1,35 @@
+services:
+  protocol-api:
+    image: registry.gitlab.com/tg_protocol/backend/main:latest
+    container_name: protocol-api
+    network_mode: "host"
+    restart: always
+    init: true
+    healthcheck:
+      test: ["CMD-SHELL", "curl -Ssf http://${REST_API_HOST}:${REST_API_PORT}/protocol/api/v1/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    env_file:
+      - .env
+    command: "node services/rest_api/index.js"
+
+  protocol-deposit:
+    image: registry.gitlab.com/tg_protocol/backend/main:latest
+    container_name: protocol-deposit
+    network_mode: "host"
+    restart: always
+    init: true
+    env_file:
+      - .env
+    command: "node services/deposit/index.js"
+
+  protocol-withdraw:
+    image: registry.gitlab.com/tg_protocol/backend/main:latest
+    container_name: protocol-withdraw
+    network_mode: "host"
+    restart: always
+    init: true
+    env_file:
+      - .env
+    command: "node services/withdraw/index.js"
